@@ -4,6 +4,7 @@ import { Publication } from 'components/Publication/Publication';
 import { Component } from 'react';
 import { Container } from './Reader.styled';
 
+const LS_KEY = `reader_item_index`;
 export class Reader extends Component {
   state = {
     index: 0,
@@ -16,6 +17,19 @@ export class Reader extends Component {
   onNext = () => {
     this.setState(state => ({ index: state.index + 1 }));
   };
+
+  componentDidMount() {
+    const savedState = localStorage.getItem(LS_KEY);
+    if (savedState) {
+      this.setState({ index: Number(savedState) });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.index !== this.state.index) {
+      localStorage.setItem(LS_KEY, this.state.index);
+    }
+  }
 
   render() {
     const { onPrev, onNext } = this;
